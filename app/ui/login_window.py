@@ -5,6 +5,8 @@ from PyQt6.QtWidgets import (
     QMessageBox
 )
 from PyQt6.QtCore import Qt
+from app.services.auth_service import authenticate_admin
+from app.ui.dashboard_window import DashboardWindow
 
 
 class LoginWindow(QWidget):
@@ -98,8 +100,35 @@ class LoginWindow(QWidget):
         main_layout.addWidget(card)
 
     def handle_login(self):
-        QMessageBox.information(
-            self,
-            "Login",
-            "Login interface is working!"
-        )
+        username = self.username.text().strip()
+        password = self.password.text()
+
+        if not username or not password:
+            QMessageBox.warning(
+                self,
+                "Missing Information",
+                "Please enter both username and password."
+            )
+            return
+
+        if authenticate_admin(username, password):
+            QMessageBox.information(
+                self,
+                "Login Successful",
+                "Welcome, Admin!"
+            )
+
+            self.password.clear()
+
+            self.dashboard = DashboardWindow()
+            self.dashboard.show()
+            self.close()
+
+        else:
+            QMessageBox.warning(
+                self,
+                "Login Failed",
+                "Invalid username or password."
+            )
+
+            self.password.clear()
