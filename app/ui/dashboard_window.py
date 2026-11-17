@@ -1,10 +1,12 @@
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QLabel,
     QPushButton, QHBoxLayout, QFrame,
-    QGridLayout
+    QGridLayout, QStackedWidget
 )
+
 from PyQt6.QtCore import Qt
 from app.services.dashboard_service import get_dashboard_stats
+from app.ui.department_window import DepartmentWindow
 
 
 class DashboardWindow(QWidget):
@@ -96,7 +98,14 @@ class DashboardWindow(QWidget):
         content_layout.setSpacing(20)
 
         main_layout.addWidget(sidebar)
-        main_layout.addWidget(content)
+
+        self.page_stack = QStackedWidget()
+        self.page_stack.addWidget(content)
+
+        self.department_page = DepartmentWindow()
+        self.page_stack.addWidget(self.department_page)
+
+        main_layout.addWidget(self.page_stack)
 
         header = QFrame()
         header.setObjectName("header")
@@ -182,13 +191,19 @@ class DashboardWindow(QWidget):
         self.close()
 
     def change_page(self, page_name):
-        self.page_heading.setText(page_name)
+        if page_name == "Departments":
+            self.page_stack.setCurrentWidget(self.department_page)
 
-        if page_name == "Dashboard":
-            self.welcome_label.setText(
-                "Welcome to the College Timetable Management System"
-            )
         else:
-            self.welcome_label.setText(
-                f"{page_name} Management Module"
-            )
+            self.page_stack.setCurrentIndex(0)
+
+            self.page_heading.setText(page_name)
+
+            if page_name == "Dashboard":
+                self.welcome_label.setText(
+                "Welcome to the College Timetable Management System"
+                )
+            else:
+                self.welcome_label.setText(
+                    f"{page_name} Management Module"
+                )
