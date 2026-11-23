@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from app.services.dashboard_service import get_dashboard_stats
 from app.ui.department_window import DepartmentWindow
+from app.ui.faculty_window import FacultyWindow
 
 
 class DashboardWindow(QWidget):
@@ -105,6 +106,9 @@ class DashboardWindow(QWidget):
         self.department_page = DepartmentWindow()
         self.page_stack.addWidget(self.department_page)
 
+        self.faculty_page = FacultyWindow()
+        self.page_stack.addWidget(self.faculty_page)
+
         main_layout.addWidget(self.page_stack)
 
         header = QFrame()
@@ -194,10 +198,15 @@ class DashboardWindow(QWidget):
         if page_name == "Departments":
             self.page_stack.setCurrentWidget(self.department_page)
 
+        elif page_name == "Faculty":
+            self.page_stack.setCurrentWidget(self.faculty_page)
+
         else:
             self.page_stack.setCurrentIndex(0)
 
-            self.page_heading.setText(page_name)
+            self.page_heading.setText(
+                "Admin Dashboard" if page_name == "Dashboard" else page_name
+            )
 
             if page_name == "Dashboard":
                 self.welcome_label.setText(
