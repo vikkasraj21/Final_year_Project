@@ -53,12 +53,15 @@ class DepartmentWindow(QWidget):
         self.delete_button = QPushButton("Delete Department")
         self.delete_button.setEnabled(False)
         self.delete_button.clicked.connect(self.handle_delete_department)
+        self.clear_button = QPushButton("Clear Selection")
+        self.clear_button.clicked.connect(self.clear_selection)
 
         form_layout.addWidget(self.department_code)
         form_layout.addWidget(self.department_name)
         form_layout.addWidget(self.add_button)
         form_layout.addWidget(self.update_button)
         form_layout.addWidget(self.delete_button)
+        form_layout.addWidget(self.clear_button)
 
         layout.addLayout(form_layout)
 
@@ -312,3 +315,11 @@ class DepartmentWindow(QWidget):
                 "Database Error",
                 f"Unable to delete department:\n{error}"
             )
+
+    def clear_selection(self):
+        self.selected_department_id = None
+        self.department_code.clear()
+        self.department_name.clear()
+        self.department_table.clearSelection()
+        self.update_button.setEnabled(False)
+        self.delete_button.setEnabled(False)
